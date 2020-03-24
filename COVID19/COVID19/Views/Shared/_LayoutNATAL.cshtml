@@ -1,0 +1,109 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>COVID-19 App</title>
+
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <link rel="manifest" href="/manifest.json">
+    @*<link rel="icon" type="image/png" sizes="16x16" href="/images/icons/icon16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/icon32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/icon180x180.png">*@
+    <link rel="mask-icon" href="/images/icons/logo.svg" color="#FF6AA2">
+    <meta name="msapplication-TileColor" content="#FF6AA2">
+    <meta name="theme-color" content="#FF6AA2">
+
+    <link rel="stylesheet" href="https://natalfwk.gruposancorseguros.com/nf-institucional/2.2.0/nfi-ps.min.css">
+</head>
+<body>
+    <div id="app" nf-block-ui>
+        <nav nf-sidebar="sidebar"></nav>
+
+        <div class="sidebar-main">
+            <div class="main-banner">
+                <h3 class="mainTitleLarge margin-none text-gray-darker"></h3>
+                <p id="subtitle" class="text-gray-darker margin-none"></p>
+            </div>
+
+            <main id="app-main" class="container" nf-block-ui></main>
+
+            <footer class="container text-center">
+                <a href="#">Términos y Condiciones</a> |
+                <a href="#">Políticas de privacidad</a> |
+                <a href="#">Grupo Sancor Seguros.</a> Todos los derechos reservados
+            </footer>
+        </div>
+    </div>
+
+    <div id="home-view" class="hide">
+        @RenderBody()
+    </div>
+
+    <div id="gestiones-view" class="hide">
+        <div class="row nf-card-group">
+            <div class="col-md-6">
+                <div nf-button-card
+                     nf-button-card-icon_src="//natalfwk.gruposancorseguros.com/nf-institucional/1.2.1/img/marca-automax.svg"
+                     nf-button-card-icon_alt="Texto alternativo"
+                     nf-button-card-link_url="#gestiones/autorizaciones"
+                     nf-button-card-text="¿Necesitás hacerte una práctica o estudio?"
+                     nf-button-card-title="Autorizaciones">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div nf-button-card
+                     nf-button-card-icon_src="//natalfwk.gruposancorseguros.com/nf-institucional/1.2.1/img/marca-automax.svg"
+                     nf-button-card-icon_alt="Texto alternativo"
+                     nf-button-card-link_url="#gestiones/reintegros"
+                     nf-button-card-text="¿solicitar o consultar reintegros?"
+                     nf-button-card-title="Reintegros">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="gestiones-autorizaciones-view" class="hide">
+        <div class="row nf-card-group">
+            <div class="col-md-6">
+                <div nf-button-card
+                     nf-button-card-icon_src="//natalfwk.gruposancorseguros.com/nf-institucional/1.2.1/img/marca-automax.svg"
+                     nf-button-card-icon_alt="Texto alternativo"
+                     nf-button-card-link_url="#gestiones/autorizaciones/gestionar"
+                     nf-button-card-text="¿Necesitás pedir una autorización?"
+                     nf-button-card-title="Gestionar Autorización">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div nf-button-card
+                     nf-button-card-icon_src="//natalfwk.gruposancorseguros.com/nf-institucional/1.2.1/img/marca-automax.svg"
+                     nf-button-card-icon_alt="Texto alternativo"
+                     nf-button-card-link_url="#gestiones/autorizaciones/verificar"
+                     nf-button-card-text="¿Queres saber si la práctica tiene cobertura o requiere autorización?"
+                     nf-button-card-title="Verificar práctica">
+                </div>
+            </div>
+        </div>
+
+        <div class="row nf-card-group padding-base-top">
+            <div class="col-md-6">
+                <div nf-button-card
+                     nf-button-card-icon_src="//natalfwk.gruposancorseguros.com/nf-institucional/1.2.1/img/marca-automax.svg"
+                     nf-button-card-icon_alt="Texto alternativo"
+                     nf-button-card-link_url="#gestiones/autorizaciones/consultar"
+                     nf-button-card-text="¿No sabes el estado de tu autorización?"
+                     nf-button-card-title="Consultar estado">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://natalfwk.gruposancorseguros.com/nf-institucional/2.2.0/nfi.min.js"></script>
+    @*<script src="~/Content/app.js"></script>*@
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

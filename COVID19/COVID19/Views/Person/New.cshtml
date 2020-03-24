@@ -1,0 +1,662 @@
+﻿@*@model COVID19.Models.NewPersonDto*@
+@{
+    ViewBag.Title = "Ingreso de Paciente";
+    Layout = "~/Views/Shared/_LayoutNATALClassic.cshtml";
+}
+
+<div class="container">
+    <div id="app">
+        <nf-wizard id="wizard"
+                   v-bind:type="wizard.type"
+                   v-bind:mode="wizard.mode"
+                   v-bind:validation-mode="wizard.validationMode"
+                   v-bind:active-step.sync="wizard.activeStep"
+                   v-bind:steps="wizard.steps"
+                   v-on:init="onInit"
+                   v-on:enter-step="onEnterStep">
+        </nf-wizard>
+    </div>
+
+    <!-- Maquetado de cada solapa del Wizard -->
+    <div id="step1" class="hide" v-pre>
+        <div class="container">
+            <form id="form1" v-validation v-on:submit.prevent>
+
+                <div class="row">
+                    <div class="form-group col-xs-11">
+                        <label for="Name" class="control-label">Nombre</label>
+                        <input type="text"
+                               class="form-control"
+                               name="Name"
+                               id="Name"
+                               v-model="Name"
+                               data-fv-notempty="true"
+                               data-fv-notempty-message="El campo Nombre es obligatorio." />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-11">
+                        <label for="Surname" class="control-label">Segundo Nombre</label>
+                        <input type="text"
+                               class="form-control"
+                               name="Surname"
+                               id="Surname"
+                               v-model="Surname"
+                               data-fv-notempty="true"
+                               data-fv-notempty-message="El campo es obligatorio." />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-11">
+                        <label for="Lastname" class="control-label">Apellido</label>
+                        <input type="text"
+                               class="form-control"
+                               name="Lastname"
+                               id="Lastname"
+                               v-model="Lastname"
+                               data-fv-notempty="true"
+                               data-fv-notempty-message="El campo es obligatorio." />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-11">
+                        <label for="DocumentNumber" class="control-label">Documento</label>
+                        <input type="text"
+                               class="form-control"
+                               name="DocumentNumber"
+                               id="DocumentNumber"
+                               v-model="DocumentNumber"
+                               data-fv-notempty="true"
+                               data-fv-notempty-message="El campo es obligatorio." />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-11">
+                        <label for="Genre" class="control-label">Género</label>
+                        <input type="text"
+                               class="form-control"
+                               name="Genre"
+                               id="DocumentNumber"
+                               v-model="Genre"
+                               data-fv-notempty="true"
+                               data-fv-notempty-message="El campo es obligatorio." />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                        <label for="DateOfBirth" class="control-label">Nacimiento</label>
+                        <nf-datepicker name="DateOfBirth"
+                                       v-model="DateOfBirth"
+                                       v-bind:view-mode="'years'"></nf-datepicker>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                        <label for="MaritalState" class="control-label">Estado Civil</label>
+                        <nf-autocomplete v-bind:source="maritalStatusOptions"
+                                         v-model="MaritalState"
+                                         v-bind:search-by-id="'true'"
+                                         v-bind:minimum-input-length="0">
+                        </nf-autocomplete>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div id="step2" class="hide" v-pre>
+        <div class="container">
+            <form id="form2" v-validation v-on:submit.prevent>
+
+                <div class="row">
+                    <div class="form-group col-xs-11">
+                        <label for="Street" class="control-label">Calle</label>
+                        <input type="text"
+                               class="form-control"
+                               name="Street"
+                               id="Street"
+                               v-model="Street"
+                               data-fv-notempty="true"
+                               data-fv-notempty-message="El campo es obligatorio." />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-11">
+                        <label for="Number" class="control-label">Números</label>
+                        <input type="text"
+                               class="form-control"
+                               name="Number"
+                               id="Number"
+                               v-model="Number"
+                               data-fv-notempty="true"
+                               data-fv-notempty-message="El campo es obligatorio." />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-11">
+                        <label for="Floor" class="control-label">Piso</label>
+                        <input type="text"
+                               class="form-control"
+                               name="Floor"
+                               id="Floor"
+                               v-model="Floor"
+                               data-fv-notempty="true"
+                               data-fv-notempty-message="El campo es obligatorio." />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-11">
+                        <label for="Dept" class="control-label">Depto.</label>
+                        <input type="text"
+                               class="form-control"
+                               name="Dept"
+                               id="Dept"
+                               v-model="Dept"
+                               data-fv-notempty="true"
+                               data-fv-notempty-message="El campo es obligatorio." />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-11">
+                        <label for="City" class="control-label">Ciudad</label>
+                        <input type="text"
+                               class="form-control"
+                               name="City"
+                               id="City"
+                               v-model="City"
+                               data-fv-notempty="true"
+                               data-fv-notempty-message="El campo es obligatorio." />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-11">
+                        <label for="State" class="control-label">Provincia</label>
+                        <input type="text"
+                               class="form-control"
+                               name="State"
+                               id="State"
+                               v-model="State"
+                               data-fv-notempty="true"
+                               data-fv-notempty-message="El campo es obligatorio." />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-11">
+                        <label for="Comments" class="control-label">Comentarios</label>
+                        <nf-text-editor v-model="Comments"
+                                        v-bind:mode="CommentsMode">
+                        </nf-text-editor>
+                    </div>
+                </div>
+
+
+
+            </form>
+        </div>
+    </div>
+
+    <div id="step3" class="hide" v-pre>
+        <div class="container">
+            <form id="form3" v-validation v-on:submit.prevent>
+
+                <div class="row">
+                    <div class="form-group col-xs-11">
+                        <label for="Phone" class="control-label">Teléfono</label>
+                        <input type="text"
+                               class="form-control"
+                               name="Phone"
+                               id="Phone"
+                               v-model="Phone"
+                               data-fv-notempty="true"
+                               data-fv-notempty-message="El campo es obligatorio." />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-11">
+                        <label for="MobilePhone" class="control-label">Celular</label>
+                        <input type="text"
+                               class="form-control"
+                               name="MobilePhone"
+                               id="MobilePhone"
+                               v-model="Phone"
+                               data-fv-notempty="true"
+                               data-fv-notempty-message="El campo es obligatorio." />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-11">
+                        <label for="Mail" class="control-label">Mail</label>
+                        <input type="text"
+                               class="form-control"
+                               name="Mail"
+                               id="Mail"
+                               v-model="Mail"
+                               data-fv-notempty="true"
+                               data-fv-notempty-message="El campo es obligatorio." />
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div id="step4" class="hide" v-pre>
+        <div class="container">
+            <form id="form4" v-validation v-on:submit.prevent>
+
+                <div class="row" style="margin-bottom: 22px; padding-left: 12px;">
+                    <label for="HaveSymptoms">Presenta Síntomas</label> <br />
+                    <nf-switch id="HaveSymptoms"
+                               v-model="HaveSymptoms"
+                               v-bind:off-text="'No'"
+                               v-bind:on-text="'Sí'"
+                               v-bind:label-text="''">
+                    </nf-switch>
+                </div>
+
+                <div class="row" style="margin-bottom: 22px; padding-left: 12px;">
+                    <label for="HaveSymptoms">Mantuvo contacto con personas infectadas</label><br />
+                    <nf-switch id="HadContact"
+                               v-model="HadContact"
+                               v-bind:off-text="'No'"
+                               v-bind:on-text="'Sí'"
+                               v-bind:label-text="''">
+                    </nf-switch>
+                </div>
+
+                <div class="row" style="margin-bottom: 22px; padding-left: 12px;">
+                    <label for="RiskGroup">Grupo de riesgo</label><br />
+                    <nf-switch id="RiskGroup"
+                               v-model="RiskGroup"
+                               v-bind:off-text="'No'"
+                               v-bind:on-text="'Sí'"
+                               v-bind:label-text="''">
+                    </nf-switch>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-11">
+                        <label for="RiskReason" class="control-label">Motivo de riesgo</label>
+                        <input type="text"
+                               class="form-control"
+                               name="RiskReason"
+                               id="RiskReason"
+                               v-model="RiskReason" />
+                    </div>
+                </div>
+
+                <div class="row" style="margin-bottom: 22px; padding-left: 12px;">
+                    <label for="IsReturning">En viaje de regreso</label><br />
+                    <nf-switch id="IsReturning"
+                               v-model="IsReturning"
+                               v-bind:off-text="'No'"
+                               v-bind:on-text="'Sí'"
+                               v-bind:label-text="''">
+                    </nf-switch>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-11">
+                        <label for="CountryEntranceDate" class="control-label">Fecha de ingreso al país</label>
+                        <input type="text"
+                               class="form-control"
+                               name="CountryEntranceDate"
+                               id="CountryEntranceDate"
+                               v-model="CountryEntranceDate" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-11">
+                        <label for="TravelCountry" class="control-label">País de procedencia</label>
+                        <input type="text"
+                               class="form-control"
+                               name="TravelCountry"
+                               id="TravelCountry"
+                               v-model="TravelCountry" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-11">
+                        <label for="PositiveTestDate" class="control-label">Fecha de test positivo</label>
+                        <input type="text"
+                               class="form-control"
+                               name="PositiveTestDate"
+                               id="PositiveTestDate"
+                               v-model="PositiveTestDate" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-xs-11">
+                        <label for="TreatingDoctor" class="control-label">Médico tratante</label>
+                        <input type="text"
+                               class="form-control"
+                               name="TreatingDoctor"
+                               id="TreatingDoctor"
+                               v-model="TreatingDoctor" />
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+
+    <div id="step5" class="hide" v-pre>
+        <div class="container">
+            <form id="form5" v-validation v-on:submit.prevent>
+
+                <div class="row" style="margin-bottom: 22px; padding-left: 12px;">
+                    <label for="InIsolation">En aislamiento</label> <br />
+                    <nf-switch id="InIsolation"
+                               v-model="InIsolation"
+                               v-bind:off-text="'No'"
+                               v-bind:on-text="'Sí'"
+                               v-bind:label-text="''">
+                    </nf-switch>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+
+@section scripts {
+    <script type="text/javascript">
+        window.maritalStatusOptions = [
+            { id: 1, text: 'Casado/a' },
+            { id: 2, text: 'Soltero/a' },
+            { id: 3, text: 'Otro' }
+        ];
+
+        // Definición del View Model
+        var ViewModel = {
+            el: '#app',
+            // Datos disponibles para el Binding
+            methods: {
+                onInit: function (config) {
+                    console.log("onInit general del Wizard");
+                },
+
+                onEnterStep: function (currentStep, nextStep) {
+                    console.log("onEnterStep general del Wizard");
+                },
+
+                onFinish: function (config) {
+                    console.log("onFinish general del Wizard");
+                }
+            },
+            data: {
+                wizard: {
+                    type: NF.Wizard.Type.TABS,
+                    activeStep: 0,
+                    mode: NF.Wizard.Mode.FREE,
+                    validationMode: NF.Wizard.ValidationMode.ALWAYS,
+
+                    // Configuración de cada uno de los pasos del Wizard
+                    steps: [
+
+                        /**
+                         * Paso 1
+                         */
+                        {
+                            displayName: 'Datos personales',
+                            content: '#step1',
+
+                            viewModel: {
+                                data: {
+                                    Name: '',
+                                    Surname: '',
+                                    Lastname: '',
+                                    DocumentNumber: '',
+                                    Genre: null,
+                                    DateOfBirth: '',
+                                    MaritalState: null
+                                },
+                                methods: {
+                                    validate: function () {
+                                        return NF.Validation.Form.validate('#form1');
+                                    }
+                                },
+                                busEvents: {
+                                    'get-name': function () {
+                                        this.Bus.$emit(
+                                            'name',
+                                            this.nombre + ' ' + this.apellido
+                                        );
+                                    }
+                                }
+                            },
+
+                            onInit: function (config) {
+                                console.log("onInit Step1");
+                            },
+
+                            onEnter: function (config, direction) {
+                                console.log("onEnter Step1", direction);
+                                console.log(config);
+                            },
+
+                            onExit: function (config, direction) {
+                                console.log("onExit Step1", direction);
+                                console.log(config);
+                            },
+
+                            validate: function (config, direction) {
+                                console.log("validate Step1", direction);
+                                console.log(config);
+                                // Si el tab no se visitó nunca el view model no se crea
+                                // consideramos que el paso no es valido
+                                if (!(config.viewModel instanceof Vue)) {
+                                    return false;
+                                }
+
+                                return config.viewModel.validate();
+                            }
+                        },
+
+                        /**
+                         * Paso 2
+                         */
+                        {
+                            displayName: 'Domicilio',
+                            content: '#step2',
+                            viewModel: {
+                                data: {
+                                    Street: '',
+                                    Number: '',
+                                    Floor: '',
+                                    Dept: '',
+                                    City: '',
+                                    State: '',
+                                    Comments: '',
+                                    CommentsMode: NF.TextEditor.Mode.BASIC
+                                },
+                                methods: {
+                                    validate: function () {
+                                        return NF.Validation.Form.validate('#form2');
+                                    }
+                                }
+                            },
+
+                            onInit: function (config) {
+                                console.log("onInit Step2");
+                            },
+
+                            onEnter: function (config, direction) {
+                                console.log("onEnter Step2", direction);
+                                console.log(config);
+                            },
+
+                            onExit: function (config, direction) {
+                                console.log("onExit Step2", direction);
+                                console.log(config);
+                            },
+
+                            validate: function (config, direction) {
+                                console.log("validate Step2", direction);
+                                // Si el tab no se visitó nunca el view model no se crea
+                                // consideramos que el paso no es valido
+                                if (!(config.viewModel instanceof Vue)) {
+                                    return false;
+                                }
+                                return config.viewModel.validate();
+                            }
+                        },
+                        {
+                            displayName: 'Contacto',
+                            content: '#step3',
+                            viewModel: {
+                                data: {
+                                    Phone: '',
+                                    MobilePhone: '',
+                                    Mail: '',
+                                },
+                                methods: {
+                                    validate: function () {
+                                        return NF.Validation.Form.validate('#form2');
+                                    }
+                                }
+                            },
+
+                            onInit: function (config) {
+                                console.log("onInit step3");
+                            },
+
+                            onEnter: function (config, direction) {
+                                console.log("onEnter step3", direction);
+                                console.log(config);
+                            },
+
+                            onExit: function (config, direction) {
+                                console.log("onExit step3", direction);
+                                console.log(config);
+                            },
+
+                            validate: function (config, direction) {
+                                console.log("validate step3", direction);
+                                // Si el tab no se visitó nunca el view model no se crea
+                                // consideramos que el paso no es valido
+                                if (!(config.viewModel instanceof Vue)) {
+                                    return false;
+                                }
+                                return config.viewModel.validate();
+                            }
+                        },
+                        {
+                            displayName: 'Datos Médicos',
+                            content: '#step4',
+                            viewModel: {
+                                data: {
+                                    HaveSymptoms: false,
+                                    HadContact: false,
+                                    RiskGroup: false,
+                                    RiskReason: '',
+                                    IsReturning: false,
+                                    CountryEntranceDate: '',
+                                    TravelCountry: '',
+                                    PositiveTestDate: '',
+                                    TreatingDoctor: '',
+                                },
+                                methods: {
+                                    validate: function () {
+                                        return NF.Validation.Form.validate('#form2');
+                                    }
+                                }
+                            },
+
+                            onInit: function (config) {
+                                console.log("onInit step4");
+                            },
+
+                            onEnter: function (config, direction) {
+                                console.log("onEnter step4", direction);
+                                console.log(config);
+                            },
+
+                            onExit: function (config, direction) {
+                                console.log("onExit step4", direction);
+                                console.log(config);
+                            },
+
+                            validate: function (config, direction) {
+                                console.log("validate step4", direction);
+                                // Si el tab no se visitó nunca el view model no se crea
+                                // consideramos que el paso no es valido
+                                if (!(config.viewModel instanceof Vue)) {
+                                    return false;
+                                }
+                                return config.viewModel.validate();
+                            }
+                        },
+                        {
+                            displayName: 'Datos de Aislamiento',
+                            content: '#step5',
+                            viewModel: {
+                                data: {
+                                    InIsolation: false,
+                                },
+                                methods: {
+                                    validate: function () {
+                                        return NF.Validation.Form.validate('#form2');
+                                    }
+                                }
+                            },
+
+                            onInit: function (config) {
+                                console.log("onInit step5");
+                            },
+
+                            onEnter: function (config, direction) {
+                                console.log("onEnter step5", direction);
+                                console.log(config);
+                            },
+
+                            onExit: function (config, direction) {
+                                console.log("onExit step5", direction);
+                                console.log(config);
+                            },
+
+                            validate: function (config, direction) {
+                                console.log("validate step5", direction);
+                                // Si el tab no se visitó nunca el view model no se crea
+                                // consideramos que el paso no es valido
+                                if (!(config.viewModel instanceof Vue)) {
+                                    return false;
+                                }
+                                return config.viewModel.validate();
+                            }
+                        }
+                    ]
+                }
+
+            }
+
+        }
+
+        // Instanciamos el View Model
+        var vm = new NF(ViewModel);
+    </script>
+}
