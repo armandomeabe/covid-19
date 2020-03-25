@@ -45,6 +45,8 @@ namespace COVID19.Data
         public System.DateTime EffectDate { get; set; }
         public Nullable<System.DateTime> NullDate { get; set; }
         public bool HadInfectedContact { get; set; }
+        public bool IsReturning { get; set; }
+        public Nullable<int> QtyPersonsInTouch { get; set; }
     
         public virtual Adress Adress { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

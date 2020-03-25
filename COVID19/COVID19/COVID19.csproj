@@ -339,6 +339,9 @@
     <Content Include="Views\Person\PersonalInfo.cshtml" />
     <Content Include="Views\Person\Address.cshtml" />
     <Content Include="Views\Person\Contact.cshtml" />
+    <Content Include="Views\Person\Medical.cshtml" />
+    <Content Include="Views\Person\Isolation.cshtml" />
+    <Content Include="Views\Person\Brief.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

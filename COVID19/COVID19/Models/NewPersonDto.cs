@@ -31,9 +31,9 @@ namespace COVID19.Models
         [Display(Name = "Género")]
         public string Gender { get; set; }
 
-        [Required(ErrorMessage = "Información requerida"), MaxLength(250)]
+        [Required(ErrorMessage = "Información requerida")]
         [Display(Name = "Nacimiento")]
-        public string BirrhtDate { get; set; }
+        public DateTime? BirrhtDate { get; set; }
 
         //[Required(ErrorMessage = "Información requerida"), MaxLength(250)]
         [Display(Name = "Estado Civil")]
@@ -50,9 +50,9 @@ namespace COVID19.Models
         [Display(Name = "Calle")]
         public string Street { get; set; }
 
-        [Required(ErrorMessage = "Información requerida"), MaxLength(250)]
+        [Required(ErrorMessage = "Información requerida")]
         [Display(Name = "Número")]
-        public string Number { get; set; }
+        public int? Number { get; set; }
 
         [Display(Name = "Piso")]
         public string Floor { get; set; }
@@ -92,18 +92,20 @@ namespace COVID19.Models
 
     public class NewPersonDtoStep4
     {
+        public int PersonID { get; set; }
+
         // Paso 4: Datos Médicos
         [Display(Name = "Presenta Síntomas")]
         public bool HaveSymptoms { get; set; }
 
         [Display(Name = "Mantuvo contacto con personas infectadas")]
-        public bool HadContact { get; set; }
+        public bool HadInfectedContact { get; set; }
 
         [Display(Name = "Grupo de riesgo")]
         public bool RiskGroup { get; set; }
 
         [Display(Name = "Motivo de riesgo")]
-        public string RiskReason { get; set; }
+        public int? RiskReasonID { get; set; }
 
         [Display(Name = "En viaje de regreso")]
         public bool IsReturning { get; set; }
@@ -117,7 +119,7 @@ namespace COVID19.Models
         public string TravelCountry { get; set; }
 
         [Display(Name = "Fecha de test positivo")]
-        public DateTime PositiveTestDate { get; set; }
+        public DateTime? PositiveTestDate { get; set; }
 
         [Display(Name = "Médico tratante")]
         public string TreatingDoctor { get; set; }
@@ -126,26 +128,28 @@ namespace COVID19.Models
 
     public class NewPersonDtoStep5
     {
+        public int PersonID { get; set; }
+
         // Paso 5: Datos de aislamiento
         [Display(Name = "En aislamiento")]
         public bool InIsolation { get; set; }
 
         [Display(Name = "Fecha de inicio de aislamiento")]
-        public DateTime IsolationStart { get; set; }
+        public DateTime? IsolationStart { get; set; }
 
         [Display(Name = "Fecha de fin de aislamiento")]
-        public DateTime IsolationEnd { get; set; }
+        public DateTime? IsolationEnd { get; set; }
 
         [Display(Name = "Cantidad de personas en contacto")]
-        public int QtyPersonsInTouch { get; set; }
+        public int? QtyPersonsInTouch { get; set; }
 
         [Required(ErrorMessage = "Información requerida"), MaxLength(250)]
         [Display(Name = "Calle")]
         public string ContactStreet { get; set; }
 
-        [Required(ErrorMessage = "Información requerida"), MaxLength(250)]
+        [Required(ErrorMessage = "Información requerida")]
         [Display(Name = "Número")]
-        public string ContactNumber { get; set; }
+        public int? ContactNumber { get; set; }
 
         [Display(Name = "Piso")]
         public string ContactFloor { get; set; }
@@ -160,6 +164,14 @@ namespace COVID19.Models
         [Required(ErrorMessage = "Información requerida"), MaxLength(250)]
         [Display(Name = "Provincia")]
         public string ContactState { get; set; }
+    }
 
+    public class NewPersonBriefDto
+    {
+        public NewPersonDtoStep1 step1 { get; set; }
+        public NewPersonDtoStep2 step2 { get; set; }
+        public NewPersonDtoStep3 step3 { get; set; }
+        public NewPersonDtoStep4 step4 { get; set; }
+        public NewPersonDtoStep5 step5 { get; set; }
     }
 }

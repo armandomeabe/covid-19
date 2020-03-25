@@ -151,6 +151,8 @@
           <Property Name="EffectDate" Type="datetime" Nullable="false" />
           <Property Name="NullDate" Type="datetime" />
           <Property Name="HadInfectedContact" Type="bit" Nullable="false" />
+          <Property Name="IsReturning" Type="bit" Nullable="false" />
+          <Property Name="QtyPersonsInTouch" Type="int" />
         </EntityType>
         <EntityType Name="PatientActions">
           <Key>
@@ -805,6 +807,8 @@
           <NavigationProperty Name="Status" Relationship="Covid19Model.FK__Patient__StatuID__46B27FE2" FromRole="Patient" ToRole="Status" />
           <NavigationProperty Name="PatientHistories" Relationship="Covid19Model.FK__PatientHi__Patie__4E53A1AA" FromRole="Patient" ToRole="PatientHistory" />
           <Property Name="HadInfectedContact" Type="Boolean" Nullable="false" />
+          <Property Name="IsReturning" Type="Boolean" Nullable="false" />
+          <Property Name="QtyPersonsInTouch" Type="Int32" />
         </EntityType>
         <EntityType Name="PatientAction">
           <Key>
@@ -1228,6 +1232,8 @@
           <EntitySetMapping Name="Patients">
             <EntityTypeMapping TypeName="Covid19Model.Patient">
               <MappingFragment StoreEntitySet="Patient">
+                <ScalarProperty Name="QtyPersonsInTouch" ColumnName="QtyPersonsInTouch" />
+                <ScalarProperty Name="IsReturning" ColumnName="IsReturning" />
                 <ScalarProperty Name="HadInfectedContact" ColumnName="HadInfectedContact" />
                 <ScalarProperty Name="NullDate" ColumnName="NullDate" />
                 <ScalarProperty Name="EffectDate" ColumnName="EffectDate" />
