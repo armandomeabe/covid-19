@@ -38,20 +38,17 @@
                 <h3>@item.LastName, @item.Name @item.SecondName</h3>
 
                 <dl class="dl-horizontal">
-                    <dt>@Html.LabelFor(model => item.Name)</dt>
+                    @*<dt>@Html.LabelFor(model => item.Name)</dt>
                     <dd>@Html.DisplayFor(model => item.Name)</dd>
 
                     <dt>@Html.LabelFor(model => item.SecondName)</dt>
                     <dd>@Html.DisplayFor(model => item.SecondName)</dd>
 
                     <dt>@Html.LabelFor(model => item.LastName)</dt>
-                    <dd>@Html.DisplayFor(model => item.LastName)</dd>
+                    <dd>@Html.DisplayFor(model => item.LastName)</dd>*@
 
                     <dt>@Html.LabelFor(model => item.DocumentNumber)</dt>
                     <dd>@Html.DisplayFor(model => item.DocumentNumber)</dd>
-
-                    <dt>@Html.LabelFor(model => item.Gender)</dt>
-                    <dd>@Html.DisplayFor(model => item.Gender)</dd>
 
                     @if (item.BirrhtDate.HasValue)
                     {
