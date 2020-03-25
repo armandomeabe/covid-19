@@ -4,9 +4,32 @@
     ViewBag.Title = "Personas";
 }
 
+<form>
 
-<a href="@Url.Action("PersonalInfo", "Person")" class="btn btn-success">Nueva</a>
-<br />
+    <div class="container">
+        <div style="padding-top:5%;" class="col-md-6">
+            <label for="Name" class="control-label">Buscar</label>
+            <input type="text" name="SearchPeople" id="SearchPeople" />
+
+            <button type="submit" href="@Url.Action("SearchPerson", "Person")" class="btn btn-info">Buscar </button>
+            <a href="@Url.Action("PersonalInfo", "Person")" class="btn btn-success">Nuevo</a>
+        </div>
+    </div>
+</form>
+
+@foreach (var item in Model)
+{
+
+    <div class="card bg-light mb-3" style="max-width: 18rem;">
+        <div class="card-header">Header</div>
+        <div class="card-body">
+            <p>Apellido, Nombre: @Html.DisplayFor(modelItem => item.LastName), @Html.DisplayFor(modelItem => item.Name)</p>
+            <p>Documento:  @Html.DisplayFor(modelItem => item.DocumentNumber) </p>
+            <a href="@Url.Action("PersonalInfo", "Person", new { ID = item.Personid})" class="card-link">Editar</a>
+            <a href="#" class="card-link">Borrar</a>
+        </div>
+    </div>
+}
 
 @section scripts {
 
