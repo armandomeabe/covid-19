@@ -185,7 +185,7 @@
           <Property Name="SecondName" Type="varchar" MaxLength="200" />
           <Property Name="LastName" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="DocumentTypeID" Type="int" Nullable="false" />
-          <Property Name="DocumentNumber" Type="int" Nullable="false" />
+          <Property Name="DocumentNumber" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="MaritalSatatusID" Type="int" Nullable="false" />
           <Property Name="BirrhtDate" Type="date" />
           <Property Name="AdressId" Type="int" />
@@ -572,7 +572,6 @@
           <EntitySet Name="Patients" EntityType="Covid19Model.Patient" />
           <EntitySet Name="PatientActions" EntityType="Covid19Model.PatientAction" />
           <EntitySet Name="PatientHistories" EntityType="Covid19Model.PatientHistory" />
-          <EntitySet Name="People" EntityType="Covid19Model.Person" />
           <EntitySet Name="RiskReasons" EntityType="Covid19Model.RiskReason" />
           <EntitySet Name="Status" EntityType="Covid19Model.Status" />
           <EntitySet Name="sysdiagrams" EntityType="Covid19Model.sysdiagram" />
@@ -580,10 +579,6 @@
           <AssociationSet Name="FK__Patient__AdressI__44CA3770" Association="Covid19Model.FK__Patient__AdressI__44CA3770">
             <End Role="Adress" EntitySet="Adresses" />
             <End Role="Patient" EntitySet="Patients" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Person__AdressId__3D2915A8" Association="Covid19Model.FK__Person__AdressId__3D2915A8">
-            <End Role="Adress" EntitySet="Adresses" />
-            <End Role="Person" EntitySet="People" />
           </AssociationSet>
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Covid19Model.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
@@ -613,14 +608,6 @@
             <End Role="Patient" EntitySet="Patients" />
             <End Role="ContactReason" EntitySet="ContactReasons" />
           </AssociationSet>
-          <AssociationSet Name="FK__Person__MaritalS__3C34F16F" Association="Covid19Model.FK__Person__MaritalS__3C34F16F">
-            <End Role="MaritalStatu" EntitySet="MaritalStatus" />
-            <End Role="Person" EntitySet="People" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Patient__PersonI__43D61337" Association="Covid19Model.FK__Patient__PersonI__43D61337">
-            <End Role="Person" EntitySet="People" />
-            <End Role="Patient" EntitySet="Patients" />
-          </AssociationSet>
           <AssociationSet Name="FK__Patient__RiskRea__45BE5BA9" Association="Covid19Model.FK__Patient__RiskRea__45BE5BA9">
             <End Role="RiskReason" EntitySet="RiskReasons" />
             <End Role="Patient" EntitySet="Patients" />
@@ -644,6 +631,19 @@
           <AssociationSet Name="AspNetUserRoles" Association="Covid19Model.AspNetUserRoles">
             <End Role="AspNetRole" EntitySet="AspNetRoles" />
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <EntitySet Name="People" EntityType="Covid19Model.Person" />
+          <AssociationSet Name="FK__Person__AdressId__3D2915A8" Association="Covid19Model.FK__Person__AdressId__3D2915A8">
+            <End Role="Adress" EntitySet="Adresses" />
+            <End Role="Person" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Person__MaritalS__3C34F16F" Association="Covid19Model.FK__Person__MaritalS__3C34F16F">
+            <End Role="MaritalStatu" EntitySet="MaritalStatus" />
+            <End Role="Person" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Patient__PersonI__43D61337" Association="Covid19Model.FK__Patient__PersonI__43D61337">
+            <End Role="Person" EntitySet="People" />
+            <End Role="Patient" EntitySet="Patients" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="C__MigrationHistory">
@@ -802,13 +802,13 @@
           <NavigationProperty Name="Audits" Relationship="Covid19Model.FK__Audit__PatientID__5AB9788F" FromRole="Patient" ToRole="Audit" />
           <NavigationProperty Name="Contacts" Relationship="Covid19Model.FK__Contact__Patient__55F4C372" FromRole="Patient" ToRole="Contact" />
           <NavigationProperty Name="ContactReasons" Relationship="Covid19Model.FK__ContactRe__Patie__531856C7" FromRole="Patient" ToRole="ContactReason" />
-          <NavigationProperty Name="Person" Relationship="Covid19Model.FK__Patient__PersonI__43D61337" FromRole="Patient" ToRole="Person" />
           <NavigationProperty Name="RiskReason" Relationship="Covid19Model.FK__Patient__RiskRea__45BE5BA9" FromRole="Patient" ToRole="RiskReason" />
           <NavigationProperty Name="Status" Relationship="Covid19Model.FK__Patient__StatuID__46B27FE2" FromRole="Patient" ToRole="Status" />
           <NavigationProperty Name="PatientHistories" Relationship="Covid19Model.FK__PatientHi__Patie__4E53A1AA" FromRole="Patient" ToRole="PatientHistory" />
           <Property Name="HadInfectedContact" Type="Boolean" Nullable="false" />
           <Property Name="IsReturning" Type="Boolean" Nullable="false" />
           <Property Name="QtyPersonsInTouch" Type="Int32" />
+          <NavigationProperty Name="Person" Relationship="Covid19Model.FK__Patient__PersonI__43D61337" FromRole="Patient" ToRole="Person" />
         </EntityType>
         <EntityType Name="PatientAction">
           <Key>
@@ -835,32 +835,6 @@
           <NavigationProperty Name="Patient" Relationship="Covid19Model.FK__PatientHi__Patie__4E53A1AA" FromRole="PatientHistory" ToRole="Patient" />
           <NavigationProperty Name="PatientAction" Relationship="Covid19Model.FK__PatientHi__Actio__4F47C5E3" FromRole="PatientHistory" ToRole="PatientAction" />
           <NavigationProperty Name="Voluntary" Relationship="Covid19Model.FK__PatientHi__Volun__503BEA1C" FromRole="PatientHistory" ToRole="Voluntary" />
-        </EntityType>
-        <EntityType Name="Person">
-          <Key>
-            <PropertyRef Name="Personid" />
-          </Key>
-          <Property Name="Personid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="SecondName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="LastName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="DocumentTypeID" Type="Int32" Nullable="false" />
-          <Property Name="DocumentNumber" Type="Int32" Nullable="false" />
-          <Property Name="MaritalSatatusID" Type="Int32" Nullable="false" />
-          <Property Name="BirrhtDate" Type="DateTime" Precision="0" />
-          <Property Name="AdressId" Type="Int32" />
-          <Property Name="Location" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Province" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Gender" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Nationality" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="TelephoneNumber" Type="Int32" />
-          <Property Name="MobileNumber" Type="Int32" />
-          <Property Name="Mail" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="EffectDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="NullDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Adress" Relationship="Covid19Model.FK__Person__AdressId__3D2915A8" FromRole="Person" ToRole="Adress" />
-          <NavigationProperty Name="MaritalStatu" Relationship="Covid19Model.FK__Person__MaritalS__3C34F16F" FromRole="Person" ToRole="MaritalStatu" />
-          <NavigationProperty Name="Patients" Relationship="Covid19Model.FK__Patient__PersonI__43D61337" FromRole="Person" ToRole="Patient" />
         </EntityType>
         <EntityType Name="RiskReason">
           <Key>
@@ -913,18 +887,6 @@
             </Principal>
             <Dependent Role="Patient">
               <PropertyRef Name="AdressID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Person__AdressId__3D2915A8">
-          <End Type="Covid19Model.Adress" Role="Adress" Multiplicity="0..1" />
-          <End Type="Covid19Model.Person" Role="Person" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Adress">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Person">
-              <PropertyRef Name="AdressId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1016,30 +978,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Person__MaritalS__3C34F16F">
-          <End Type="Covid19Model.MaritalStatu" Role="MaritalStatu" Multiplicity="1" />
-          <End Type="Covid19Model.Person" Role="Person" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="MaritalStatu">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Person">
-              <PropertyRef Name="MaritalSatatusID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Patient__PersonI__43D61337">
-          <End Type="Covid19Model.Person" Role="Person" Multiplicity="0..1" />
-          <End Type="Covid19Model.Patient" Role="Patient" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Person">
-              <PropertyRef Name="Personid" />
-            </Principal>
-            <Dependent Role="Patient">
-              <PropertyRef Name="PersonId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__Patient__RiskRea__45BE5BA9">
           <End Type="Covid19Model.RiskReason" Role="RiskReason" Multiplicity="0..1" />
           <End Type="Covid19Model.Patient" Role="Patient" Multiplicity="*" />
@@ -1103,6 +1041,68 @@
         <Association Name="AspNetUserRoles">
           <End Type="Covid19Model.AspNetRole" Role="AspNetRole" Multiplicity="*" />
           <End Type="Covid19Model.AspNetUser" Role="AspNetUser" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="Personid" />
+          </Key>
+          <Property Name="Personid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="SecondName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DocumentTypeID" Type="Int32" Nullable="false" />
+          <Property Name="DocumentNumber" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="MaritalSatatusID" Type="Int32" Nullable="false" />
+          <Property Name="BirrhtDate" Type="DateTime" Precision="0" />
+          <Property Name="AdressId" Type="Int32" />
+          <Property Name="Location" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Province" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Gender" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Nationality" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="TelephoneNumber" Type="Int32" />
+          <Property Name="MobileNumber" Type="Int32" />
+          <Property Name="Mail" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="EffectDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="NullDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Adress" Relationship="Covid19Model.FK__Person__AdressId__3D2915A8" FromRole="Person" ToRole="Adress" />
+          <NavigationProperty Name="MaritalStatu" Relationship="Covid19Model.FK__Person__MaritalS__3C34F16F" FromRole="Person" ToRole="MaritalStatu" />
+          <NavigationProperty Name="Patients" Relationship="Covid19Model.FK__Patient__PersonI__43D61337" FromRole="Person" ToRole="Patient" />
+        </EntityType>
+        <Association Name="FK__Person__AdressId__3D2915A8">
+          <End Type="Covid19Model.Adress" Role="Adress" Multiplicity="0..1" />
+          <End Type="Covid19Model.Person" Role="Person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Adress">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Person">
+              <PropertyRef Name="AdressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Person__MaritalS__3C34F16F">
+          <End Type="Covid19Model.MaritalStatu" Role="MaritalStatu" Multiplicity="1" />
+          <End Type="Covid19Model.Person" Role="Person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MaritalStatu">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Person">
+              <PropertyRef Name="MaritalSatatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Patient__PersonI__43D61337">
+          <End Type="Covid19Model.Person" Role="Person" Multiplicity="0..1" />
+          <End Type="Covid19Model.Patient" Role="Patient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="Personid" />
+            </Principal>
+            <Dependent Role="Patient">
+              <PropertyRef Name="PersonId" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
       </Schema>
     </edmx:ConceptualModels>
@@ -1283,30 +1283,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="People">
-            <EntityTypeMapping TypeName="Covid19Model.Person">
-              <MappingFragment StoreEntitySet="Person">
-                <ScalarProperty Name="NullDate" ColumnName="NullDate" />
-                <ScalarProperty Name="EffectDate" ColumnName="EffectDate" />
-                <ScalarProperty Name="Mail" ColumnName="Mail" />
-                <ScalarProperty Name="MobileNumber" ColumnName="MobileNumber" />
-                <ScalarProperty Name="TelephoneNumber" ColumnName="TelephoneNumber" />
-                <ScalarProperty Name="Nationality" ColumnName="Nationality" />
-                <ScalarProperty Name="Gender" ColumnName="Gender" />
-                <ScalarProperty Name="Province" ColumnName="Province" />
-                <ScalarProperty Name="Location" ColumnName="Location" />
-                <ScalarProperty Name="AdressId" ColumnName="AdressId" />
-                <ScalarProperty Name="BirrhtDate" ColumnName="BirrhtDate" />
-                <ScalarProperty Name="MaritalSatatusID" ColumnName="MaritalSatatusID" />
-                <ScalarProperty Name="DocumentNumber" ColumnName="DocumentNumber" />
-                <ScalarProperty Name="DocumentTypeID" ColumnName="DocumentTypeID" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="SecondName" ColumnName="SecondName" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Personid" ColumnName="Personid" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="RiskReasons">
             <EntityTypeMapping TypeName="Covid19Model.RiskReason">
               <MappingFragment StoreEntitySet="RiskReason">
@@ -1357,6 +1333,30 @@
               <ScalarProperty Name="Id" ColumnName="RoleId" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="People">
+            <EntityTypeMapping TypeName="Covid19Model.Person">
+              <MappingFragment StoreEntitySet="Person">
+                <ScalarProperty Name="NullDate" ColumnName="NullDate" />
+                <ScalarProperty Name="EffectDate" ColumnName="EffectDate" />
+                <ScalarProperty Name="Mail" ColumnName="Mail" />
+                <ScalarProperty Name="MobileNumber" ColumnName="MobileNumber" />
+                <ScalarProperty Name="TelephoneNumber" ColumnName="TelephoneNumber" />
+                <ScalarProperty Name="Nationality" ColumnName="Nationality" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="Province" ColumnName="Province" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="AdressId" ColumnName="AdressId" />
+                <ScalarProperty Name="BirrhtDate" ColumnName="BirrhtDate" />
+                <ScalarProperty Name="MaritalSatatusID" ColumnName="MaritalSatatusID" />
+                <ScalarProperty Name="DocumentNumber" ColumnName="DocumentNumber" />
+                <ScalarProperty Name="DocumentTypeID" ColumnName="DocumentTypeID" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="SecondName" ColumnName="SecondName" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Personid" ColumnName="Personid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

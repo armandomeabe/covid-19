@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="64ce08b6885349ce82c09bf8247d191d" Name="Diagram1" ZoomLevel="25">
+      <Diagram DiagramId="64ce08b6885349ce82c09bf8247d191d" Name="Diagram1" ZoomLevel="100">
         <EntityTypeShape EntityType="Covid19Model.C__MigrationHistory" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="Covid19Model.Adress" Width="1.5" PointX="0.75" PointY="9.5" />
         <EntityTypeShape EntityType="Covid19Model.AspNetRole" Width="1.5" PointX="10.75" PointY="2.5" />
@@ -18,13 +18,11 @@
         <EntityTypeShape EntityType="Covid19Model.Patient" Width="1.5" PointX="5.25" PointY="8" />
         <EntityTypeShape EntityType="Covid19Model.PatientAction" Width="1.5" PointX="5.25" PointY="4.375" />
         <EntityTypeShape EntityType="Covid19Model.PatientHistory" Width="1.5" PointX="7.5" PointY="9.75" />
-        <EntityTypeShape EntityType="Covid19Model.Person" Width="1.5" PointX="3" PointY="8.75" />
         <EntityTypeShape EntityType="Covid19Model.RiskReason" Width="1.5" PointX="3" PointY="5.625" />
         <EntityTypeShape EntityType="Covid19Model.Status" Width="1.5" PointX="3" PointY="15.375" />
         <EntityTypeShape EntityType="Covid19Model.sysdiagram" Width="1.5" PointX="2.75" PointY="0.75" />
         <EntityTypeShape EntityType="Covid19Model.Voluntary" Width="1.5" PointX="8.25" PointY="6.125" />
         <AssociationConnector Association="Covid19Model.FK__Patient__AdressI__44CA3770" />
-        <AssociationConnector Association="Covid19Model.FK__Person__AdressId__3D2915A8" />
         <AssociationConnector Association="Covid19Model.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
         <AssociationConnector Association="Covid19Model.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
         <AssociationConnector Association="Covid19Model.FK__Audit__PatientID__5AB9788F" />
@@ -32,14 +30,16 @@
         <AssociationConnector Association="Covid19Model.FK__Contact__Contact__56E8E7AB" />
         <AssociationConnector Association="Covid19Model.FK__Contact__Patient__55F4C372" />
         <AssociationConnector Association="Covid19Model.FK__ContactRe__Patie__531856C7" />
-        <AssociationConnector Association="Covid19Model.FK__Person__MaritalS__3C34F16F" />
-        <AssociationConnector Association="Covid19Model.FK__Patient__PersonI__43D61337" />
         <AssociationConnector Association="Covid19Model.FK__Patient__RiskRea__45BE5BA9" />
         <AssociationConnector Association="Covid19Model.FK__Patient__StatuID__46B27FE2" />
         <AssociationConnector Association="Covid19Model.FK__PatientHi__Patie__4E53A1AA" />
         <AssociationConnector Association="Covid19Model.FK__PatientHi__Actio__4F47C5E3" />
         <AssociationConnector Association="Covid19Model.FK__PatientHi__Volun__503BEA1C" />
         <AssociationConnector Association="Covid19Model.AspNetUserRoles" />
+        <EntityTypeShape EntityType="Covid19Model.Person" Width="1.5" PointX="3" PointY="9.125" />
+        <AssociationConnector Association="Covid19Model.FK__Person__AdressId__3D2915A8" />
+        <AssociationConnector Association="Covid19Model.FK__Person__MaritalS__3C34F16F" />
+        <AssociationConnector Association="Covid19Model.FK__Patient__PersonI__43D61337" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

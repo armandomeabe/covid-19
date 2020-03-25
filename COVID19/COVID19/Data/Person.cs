@@ -25,7 +25,7 @@ namespace COVID19.Data
         public string SecondName { get; set; }
         public string LastName { get; set; }
         public int DocumentTypeID { get; set; }
-        public int DocumentNumber { get; set; }
+        public string DocumentNumber { get; set; }
         public int MaritalSatatusID { get; set; }
         public Nullable<System.DateTime> BirrhtDate { get; set; }
         public Nullable<int> AdressId { get; set; }

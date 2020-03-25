@@ -1,7 +1,6 @@
 ﻿@model COVID19.Models.NewPersonDtoStep5
-
 @{
-    ViewBag.Title = "Isolation";
+    ViewBag.Title = "Datos de Aislamiento";
 }
 
 <h2>Datos de Aislamiento</h2>
@@ -10,10 +9,8 @@
 {
     @Html.AntiForgeryToken()
 
+<div class="well">
     <div class="form-horizontal">
-        <h4>NewPersonDtoStep5</h4>
-        <hr />
-
         @Html.HiddenFor(model => model.PersonID)
 
 
@@ -98,12 +95,11 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Guardar" class="btn btn-default" />
+                <a href="@Url.Action("Index")" class="btn btn-info"><< Volver a la búsqueda</a>
+                <a href="@Url.Action("Medical", "Person", new { id = Model.PersonID })" class="btn btn-info">Volver a datos médicos</a>
+                <input type="submit" value="Guardar y finalizar >>" class="btn btn-success pull-right" />
             </div>
         </div>
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
+}

@@ -4,7 +4,8 @@
     ViewBag.Title = "Brief";
 }
 
-<h2>Resumen</h2>
+<h2>Eliminar</h2>
+<h3 style="color: red;">¿Confirma que desea <strong>eliminar</strong> la persona que se detalla a continuación?</h3>
 
 <div class="well">
     <dl class="row">
@@ -156,10 +157,13 @@
 </div>
 <p>
 
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <a href="@Url.Action("Index")" class="btn btn-info"><< Volver a la búsqueda</a>
-            <a href="@Url.Action("PersonalInfo", "Person", new { id = Model.step1.PersonID })" class="btn btn-info">Editar</a>
+    <div class="form-group" style="margin-bottom: 48px;">
+        <div class="col-md-12">
+            <a href="@Url.Action("Index")" class="btn btn-lg btn-info"><< Volver a la búsqueda</a>
+            <a href="@Url.Action("ConfirmDelete", "Person", new { id = Model.step1.PersonID })" class="btn btn-lg btn-danger pull-right">
+                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                Confirmar
+            </a>
         </div>
     </div>
 

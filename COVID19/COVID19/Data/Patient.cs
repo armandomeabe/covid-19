@@ -55,10 +55,10 @@ namespace COVID19.Data
         public virtual ICollection<Contact> Contacts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ContactReason> ContactReasons { get; set; }
-        public virtual Person Person { get; set; }
         public virtual RiskReason RiskReason { get; set; }
         public virtual Status Status { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PatientHistory> PatientHistories { get; set; }
+        public virtual Person Person { get; set; }
     }
 }

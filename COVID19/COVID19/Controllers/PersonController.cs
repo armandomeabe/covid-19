@@ -11,25 +11,127 @@ namespace COVID19.Controllers
     [Authorize]
     public class PersonController : BaseController
     {
+        public ActionResult Contacts(int id)
+        {
+            var dbPerson = this.COVID19Entities.People.FirstOrDefault(x => x.Personid == id);
+            var dbContacts = this.COVID19Entities.Contacts.Where(x => x.ContactPersonId == id);
+
+            var model = new ContactsDto
+            {
+                PersonDto = new NewPersonDtoStep1
+                {
+                    PersonID = id,
+                    Name = dbPerson.Name,
+                    SecondName = dbPerson.SecondName,
+                    LastName = dbPerson.LastName,
+                    DocumentNumber = dbPerson.DocumentNumber,
+                    Gender = dbPerson.Gender,
+                    BirrhtDate = dbPerson.BirrhtDate,
+                    MaritalSatatusID = dbPerson.MaritalSatatusID
+                },
+                Contacts = dbContacts.ToList().Select(x => new ContactDto
+                {
+                    BirthDay = x.Patient.Person.BirrhtDate,
+                    DocumentNumber = x.Patient.Person.DocumentNumber,
+                    DocumentTypeID = x.Patient.Person.DocumentTypeID,
+                    Gender = x.Patient.Person.Gender,
+                    Name = x.Patient.Person.Name,
+                    LastName = x.Patient.Person.LastName,
+                    SecondName = x.Patient.Person.SecondName,
+                    Observations = x.Observations,
+                    ReasonID = x.ContactReasonId,
+                    PersonID = x.Patient.PersonId,
+                    HistoryMetadata = x.Patient.PatientHistories.ToList().Select(m => $"Fecha: {m.EffectDate.ToString("d")} - Usuario: { m.Observation } - Acción realiazda: { m.PatientAction.Action }").ToList()
+                }).ToList()
+            };
+
+            return View(model);
+        }
+
+        public ActionResult EditPersonAudit(int id)
+        {
+            var model = new EditPersonAuditDto
+            {
+                PersonID = id,
+                PatientActions = this.COVID19Entities.PatientActions.Where(x => x.Id != 5 && x.NullDate == null).Select(x => new SelectListItem
+                {
+                    Text = x.Action,
+                    Value = x.Id.ToString()
+                }).ToList()
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult EditPersonAudit(EditPersonAuditDto model)
+        {
+            var dbPerson = this.COVID19Entities.People.First(x => x.Personid == model.PersonID);
+
+            var dbPatient = dbPerson.Patients.FirstOrDefault();
+
+
+            if (dbPatient == null)
+            {
+                dbPerson.Patients.Add(new Patient
+                {
+                    EffectDate = DateTime.Now
+                });
+                this.COVID19Entities.SaveChanges();
+            }
+
+            var dbPatientHistory = new PatientHistory
+            {
+                ActionID = model.PatientActionID,
+                EffectDate = DateTime.Now,
+                Datetime = DateTime.Now,
+                Observation = User.Identity.Name + " creó el nuevo registro con éxito",
+                PatientID = dbPatient.PatientID
+            };
+
+            this.COVID19Entities.PatientHistories.Add(dbPatientHistory);
+            this.COVID19Entities.SaveChanges();
+
+            return RedirectToAction("PersonalInfo", "Person", new { id = model.PersonID });
+        }
+
         // GET: Person
         public ActionResult Index(string SearchPeople)
         {
-
-
             var Search = from P in this.COVID19Entities.People
                          select P;
-                         
-                // busco por documento o por apellido
-                Search = Search.Where(s => s.DocumentNumber.ToString().Contains(SearchPeople) || s.LastName.Contains(SearchPeople));
 
+            // busco por documento o por apellido
+            Search = Search.Where(s =>
 
-            // Las entidades no deberían llegar a la vista nunca. Se recurre a este método provisionalmente para salir rápido.
-            //var model = this.COVID19Entities.People.ToList();
-            return View(Search);
+                s.NullDate == null &&
+
+                    (s.DocumentNumber.ToString().Contains(SearchPeople) || s.LastName.Contains(SearchPeople))
+
+                ).OrderByDescending(x => x.EffectDate);
+
+            var model = Search.ToList().Select(x => new NewPersonDtoStep1
+            {
+                PersonID = x.Personid,
+                Name = x.Name,
+                SecondName = x.SecondName,
+                LastName = x.LastName,
+                DocumentNumber = x.DocumentNumber,
+                Gender = x.Gender,
+                BirrhtDate = x.BirrhtDate,
+                MaritalSatatusSTR = this.COVID19Entities.MaritalStatus.First(m => m.Id == x.MaritalSatatusID).MaritalStatus,
+                HistoryMetadata = x.Patients?.FirstOrDefault()?.PatientHistories?.Select(m => $"Fecha: {m.EffectDate.ToString("d")} - Usuario: { m.Observation } - Acción realiazda: { m.PatientAction.Action }").ToList() ?? new List<string>()
+            });
+
+            return View(model);
         }
 
-        public ActionResult PersonalInfo(int? id)
+        public ActionResult PersonalInfo(int? id, int? contactPersonId)
         {
+            if (contactPersonId.HasValue)
+            {
+                ViewBag.ContactPersonFrom = this.COVID19Entities.People.First(x => x.Personid == contactPersonId.Value);
+            }
+
             var maritalStatusOptions = this.COVID19Entities.MaritalStatus.ToList().Select(x =>
                 new SelectListItem
                 {
@@ -38,6 +140,13 @@ namespace COVID19.Controllers
                 }
             ).ToList();
             ViewBag.maritalStatusOptions = maritalStatusOptions;
+
+            var contactReasons = this.COVID19Entities.ContactReasons.ToList().Select(x => new SelectListItem
+            {
+                Text = x.Reason,
+                Value = x.Id.ToString()
+            }).ToList();
+            ViewBag.ContactReasons = contactReasons;
 
             if (id.HasValue)
             {
@@ -51,14 +160,18 @@ namespace COVID19.Controllers
                     DocumentNumber = dbPerson.DocumentNumber,
                     Gender = dbPerson.Gender,
                     BirrhtDate = dbPerson.BirrhtDate,
-                    MaritalSatatusID = dbPerson.MaritalSatatusID
+                    MaritalSatatusID = dbPerson.MaritalSatatusID,
+                    ContactPersonId = contactPersonId
                 };
 
                 return View(model);
             }
             else
             {
-                var model = new NewPersonDtoStep1 { };
+                var model = new NewPersonDtoStep1
+                {
+                    ContactPersonId = contactPersonId
+                };
                 return View(model);
             }
         }
@@ -68,6 +181,11 @@ namespace COVID19.Controllers
         {
             if (!ModelState.IsValid)
             {
+                if (model.ContactPersonId.HasValue)
+                {
+                    ViewBag.ContactPersonFrom = this.COVID19Entities.People.First(x => x.Personid == model.ContactPersonId.Value);
+                }
+
                 var maritalStatusOptions = this.COVID19Entities.MaritalStatus.ToList().Select(x =>
                     new SelectListItem
                     {
@@ -78,19 +196,51 @@ namespace COVID19.Controllers
 
                 ViewBag.maritalStatusOptions = maritalStatusOptions;
 
+                var contactReasons = this.COVID19Entities.ContactReasons.ToList().Select(x => new SelectListItem
+                {
+                    Text = x.Reason,
+                    Value = x.Id.ToString()
+                }).ToList();
+                ViewBag.ContactReasons = contactReasons;
+
                 return View(model);
             }
 
             Person dbPerson;
             if (model.PersonID == 0)
             {
+                var existingPersonByDocumentNumber = this.COVID19Entities.People.FirstOrDefault(x => x.DocumentNumber == model.DocumentNumber);
+                if (existingPersonByDocumentNumber != null)
+                {
+                    ModelState.AddModelError(string.Empty, "El documento ya está en uso");
+
+                    var maritalStatusOptions = this.COVID19Entities.MaritalStatus.ToList().Select(x =>
+                        new SelectListItem
+                        {
+                            Text = x.MaritalStatus,
+                            Value = x.Id.ToString()
+                        }
+                    ).ToList();
+
+                    ViewBag.maritalStatusOptions = maritalStatusOptions;
+
+                    var contactReasons = this.COVID19Entities.ContactReasons.ToList().Select(x => new SelectListItem
+                    {
+                        Text = x.Reason,
+                        Value = x.Id.ToString()
+                    }).ToList();
+                    ViewBag.ContactReasons = contactReasons;
+
+                    return View(model);
+                }
+
                 dbPerson = new Person
                 {
                     Name = model.Name,
                     SecondName = model.SecondName,
                     LastName = model.LastName,
                     DocumentTypeID = -1,
-                    DocumentNumber = model.DocumentNumber.GetValueOrDefault(-1),
+                    DocumentNumber = model.DocumentNumber,
                     Gender = model.Gender,
                     BirrhtDate = model.BirrhtDate,
                     MaritalSatatusID = model.MaritalSatatusID,
@@ -98,21 +248,55 @@ namespace COVID19.Controllers
                     Adress = new Adress
                     {
 
-                    }
+                    },
+                    Patients = new List<Patient>() { new Patient { EffectDate = DateTime.Now } }
                 };
 
                 this.COVID19Entities.People.Add(dbPerson);
                 this.COVID19Entities.SaveChanges();
+
+                // CREACIÓN
+                var dbPatientHistory = new PatientHistory
+                {
+                    ActionID = 5,
+                    EffectDate = DateTime.Now,
+                    Datetime = DateTime.Now,
+                    Observation = User.Identity.Name + " creó el nuevo registro con éxito",
+                    PatientID = dbPerson.Patients.First().PatientID
+                };
+                
+                this.COVID19Entities.PatientHistories.Add(dbPatientHistory);
+                this.COVID19Entities.SaveChanges();
+
+                if (model.ContactPersonId.HasValue)
+                {
+                    // FEDE! TE CEDO EL PODER!
+
+                    var contactDbPerson = this.COVID19Entities.People.First(x => x.Personid == model.ContactPersonId);
+
+                    var dbContact = new Contact
+                    {
+                        PatientID = dbPerson.Patients.First().PatientID, //dbPerson.Patients.First().PatientID,
+                        ContactPersonId = model.ContactPersonId,
+                        EffectDate = DateTime.Now,
+                        Observations = model.ContactObservations,
+                        ContactReasonId = model.ContactReasonId
+                    };
+
+                    this.COVID19Entities.Contacts.Add(dbContact);
+                    this.COVID19Entities.SaveChanges();
+                }
             }
             else
             {
+                // EDICIÓN
                 dbPerson = this.COVID19Entities.People.First(x => x.Personid == model.PersonID);
 
                 dbPerson.Name = model.Name;
                 dbPerson.SecondName = model.SecondName;
                 dbPerson.LastName = model.LastName;
                 dbPerson.DocumentTypeID = -1;
-                dbPerson.DocumentNumber = model.DocumentNumber.GetValueOrDefault(-1);
+                dbPerson.DocumentNumber = model.DocumentNumber;
                 dbPerson.Gender = model.Gender;
                 dbPerson.BirrhtDate = model.BirrhtDate;
                 dbPerson.MaritalSatatusID = model.MaritalSatatusID;
@@ -170,6 +354,7 @@ namespace COVID19.Controllers
             address.Comments = model.Comments;
             address.EffectDate = DateTime.Now;
             address.Location = model.City;
+            dbPerson.Location = model.City;
 
             this.COVID19Entities.SaveChanges();
 
@@ -465,7 +650,98 @@ namespace COVID19.Controllers
                 }
             };
 
-            return View();
+            ViewBag.MaritalStatus = this.COVID19Entities.MaritalStatus.First(x => x.Id == dbPerson.MaritalSatatusID).MaritalStatus;
+
+            var patient = dbPerson.Patients.FirstOrDefault();
+            if (patient != null && patient.RiskReasonId.HasValue)
+                ViewBag.RiskReason = this.COVID19Entities.RiskReasons.Where(x => x.Id == patient.RiskReasonId.Value).First().Reason;
+            else
+                ViewBag.RiskReason = "Sin especificar";
+
+            return View(model);
+        }
+
+        public ActionResult ConfirmDelete(int id)
+        {
+            var dbPerson = this.COVID19Entities.People.First(x => x.Personid == id);
+            dbPerson.NullDate = DateTime.Now;
+            this.COVID19Entities.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Delete(int id)
+        {
+            var dbPerson = this.COVID19Entities.People.First(x => x.Personid == id);
+
+            var model = new NewPersonBriefDto
+            {
+                step1 = new NewPersonDtoStep1
+                {
+                    PersonID = id,
+                    Name = dbPerson.Name,
+                    SecondName = dbPerson.SecondName,
+                    LastName = dbPerson.LastName,
+                    DocumentNumber = dbPerson.DocumentNumber,
+                    Gender = dbPerson.Gender,
+                    BirrhtDate = dbPerson.BirrhtDate,
+                    MaritalSatatusID = dbPerson.MaritalSatatusID
+                },
+                step2 = new NewPersonDtoStep2
+                {
+                    PersonID = id,
+                    City = dbPerson.Location,
+                    Comments = dbPerson.Adress.Comments,
+                    Dept = dbPerson.Adress.Department,
+                    Floor = dbPerson.Adress.Floor,
+                    Number = dbPerson.Adress.Number,
+                    State = dbPerson.Adress.Province,
+                    Street = dbPerson.Adress.Street
+                },
+                step3 = new NewPersonDtoStep3
+                {
+                    PersonID = id,
+                    Mail = dbPerson.Mail,
+                    MobilePhone = dbPerson.MobileNumber,
+                    Phone = dbPerson.TelephoneNumber
+                },
+                step4 = new NewPersonDtoStep4
+                {
+                    PersonID = dbPerson.Personid,
+                    HaveSymptoms = dbPerson.Patients.First().HaveSymptoms,
+                    HadInfectedContact = dbPerson.Patients.First().HadInfectedContact,
+                    RiskGroup = dbPerson.Patients.First().RiskPatient,
+                    RiskReasonID = dbPerson.Patients.First().RiskReasonId,
+                    IsReturning = dbPerson.Patients.First().IsReturning,
+                    CountryEntranceDate = dbPerson.Patients.First().CountryEntranceDAte,
+                    TravelCountry = dbPerson.Patients.First().TravelCountry,
+                    PositiveTestDate = dbPerson.Patients.First().PositiveTestDate,
+                    TreatingDoctor = dbPerson.Patients.First().Doctor
+                },
+                step5 = new NewPersonDtoStep5
+                {
+                    PersonID = id,
+                    InIsolation = dbPerson.Patients.First().Isolation,
+                    IsolationStart = dbPerson.Patients.First().IsolationDate,
+                    IsolationEnd = dbPerson.Patients.First().IsolationFinishDate,
+                    QtyPersonsInTouch = dbPerson.Patients.First().QtyPersonsInTouch,
+                    ContactStreet = dbPerson.Adress.Street,
+                    ContactNumber = dbPerson.Adress.Number,
+                    ContactFloor = dbPerson.Adress.Floor,
+                    ContactDept = dbPerson.Adress.Department,
+                    ContactCity = dbPerson.Adress.Location,
+                    ContactState = dbPerson.Adress.Province
+                }
+            };
+
+            ViewBag.MaritalStatus = this.COVID19Entities.MaritalStatus.First(x => x.Id == dbPerson.MaritalSatatusID).MaritalStatus;
+
+            var patient = dbPerson.Patients.FirstOrDefault();
+            if (patient != null && patient.RiskReasonId.HasValue)
+                ViewBag.RiskReason = this.COVID19Entities.RiskReasons.Where(x => x.Id == patient.RiskReasonId.Value).First().Reason;
+            else
+                ViewBag.RiskReason = "Sin especificar";
+
+            return View(model);
         }
 
     }

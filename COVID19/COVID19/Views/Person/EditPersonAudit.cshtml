@@ -1,0 +1,41 @@
+﻿@model COVID19.Models.EditPersonAuditDto
+
+@{
+    ViewBag.Title = "Auditoría de Modificación de Datos";
+}
+
+<h2>Auditoría de Modificación de Datos</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="well">
+        <div class="form-horizontal">
+            <h4>Por favor especifique el motivo por el que se actualiza la información de la persona</h4>
+            <hr />
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            @Html.HiddenFor(model => model.PersonID)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.PatientActionID, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(x => x.PatientActionID, Model.PatientActions, new { @class = "form-control" })
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <a href="@Url.Action("Index")" class="btn btn-info"><< Volver a la búsqueda</a>
+                    <input type="submit" value="Guardar y continuar >>" class="btn btn-success pull-right" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+

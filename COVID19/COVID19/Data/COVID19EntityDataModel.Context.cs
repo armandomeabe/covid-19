@@ -38,10 +38,10 @@ namespace COVID19.Data
         public virtual DbSet<Patient> Patients { get; set; }
         public virtual DbSet<PatientAction> PatientActions { get; set; }
         public virtual DbSet<PatientHistory> PatientHistories { get; set; }
-        public virtual DbSet<Person> People { get; set; }
         public virtual DbSet<RiskReason> RiskReasons { get; set; }
         public virtual DbSet<Status> Status { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<Voluntary> Voluntaries { get; set; }
+        public virtual DbSet<Person> People { get; set; }
     }
 }

@@ -1,35 +1,120 @@
-﻿@model IEnumerable<COVID19.Data.Person>
+﻿@model IEnumerable<COVID19.Models.NewPersonDtoStep1>
 
 @{
     ViewBag.Title = "Personas";
 }
 
-<form>
 
-    <div class="container">
-        <div style="padding-top:5%;" class="col-md-6">
-            <label for="Name" class="control-label">Buscar</label>
-            <input type="text" name="SearchPeople" id="SearchPeople" />
+<div class="container">
 
-            <button type="submit" href="@Url.Action("SearchPerson", "Person")" class="btn btn-info">Buscar </button>
-            <a href="@Url.Action("PersonalInfo", "Person")" class="btn btn-success">Nuevo</a>
+    <form class="form-signin">
+        <h2 class="form-signin-heading">Búsqueda</h2>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="input-group">
+                    <input type="text" id="SearchPeople" name="SearchPeople" class="form-control" placeholder="DNI o Apellido" autofocus>
+                    <span class="input-group-btn">
+                        <button type="submit" href="@Url.Action("SearchPerson", "Person")" class="btn btn-info pull-right"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Buscar </button>
+                    </span>
+                </div><!-- /input-group -->
+            </div><!-- /.col-lg-6 -->
+        </div><!-- /.row -->
+
+        <br />
+        <a href="@Url.Action("PersonalInfo", "Person")" class="btn btn-success"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Nuevo</a>
+    </form>
+
+</div>
+
+<div class="row" style="padding-left: 12px; padding-right: 2px; margin-top: 22px;">
+
+    @foreach (var item in Model)
+    {
+    <div class="col-sm-6 col-md-4">
+        <div class="thumbnail">
+            <img src="~/Content/user.png" alt="User" style="max-height: 124px;">
+            <div class="caption well">
+                <h3>@item.LastName, @item.Name @item.SecondName</h3>
+
+                <dl class="dl-horizontal">
+                    <dt>@Html.LabelFor(model => item.Name)</dt>
+                    <dd>@Html.DisplayFor(model => item.Name)</dd>
+
+                    <dt>@Html.LabelFor(model => item.SecondName)</dt>
+                    <dd>@Html.DisplayFor(model => item.SecondName)</dd>
+
+                    <dt>@Html.LabelFor(model => item.LastName)</dt>
+                    <dd>@Html.DisplayFor(model => item.LastName)</dd>
+
+                    <dt>@Html.LabelFor(model => item.DocumentNumber)</dt>
+                    <dd>@Html.DisplayFor(model => item.DocumentNumber)</dd>
+
+                    <dt>@Html.LabelFor(model => item.Gender)</dt>
+                    <dd>@Html.DisplayFor(model => item.Gender)</dd>
+
+                    @if (item.BirrhtDate.HasValue)
+                    {
+                        <dt>@Html.LabelFor(model => item.BirrhtDate)</dt>
+                        <dd>@(item.BirrhtDate.Value.ToString("d"))</dd>
+                    }
+
+                    <dt>@Html.LabelFor(model => item.MaritalSatatusID)</dt>
+                    <dd>@Html.DisplayFor(model => item.MaritalSatatusSTR)</dd>
+                </dl>
+
+                <p style="text-align: center;">
+                    <a href="@Url.Action("Delete", "Person", new { id = item.PersonID })" style="margin-right: 2px; margin-top: 2px;" class="btn btn-danger" role="button">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        Eliminar
+                    </a>
+                    <a href="@Url.Action("EditPersonAudit", "Person", new { id = item.PersonID })" style="margin-right: 2px; margin-top: 2px;" class="btn btn-primary" role="button">
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                        Editar
+                    </a>
+                    <a href="@Url.Action("Brief", "Person", new { id = item.PersonID })" style="margin-right: 2px; margin-top: 2px;" class="btn btn-info" role="button">
+                        <span class="glyphicon glyphicon-book" aria-hidden="true"></span>
+                        Ver
+                    </a>
+                    <a href="@Url.Action("Contacts", "Person", new { id = item.PersonID })" style="margin-right: 2px; margin-top: 2px;" class="btn btn-info" role="button">
+                        <span class="glyphicon glyphicon glyphicon-user" aria-hidden="true"></span>
+                        Contactos
+                    </a>
+                    <button type="button" class="btn btn-info" data-toggle="modal" style="margin-right: 2px; margin-top: 2px;" data-target="#Modal_@item.PersonID">
+                        <span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>
+                        Ver historial
+                    </button>
+                </p>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="Modal_@item.PersonID" tabindex="-1" role="dialog" aria-labelledby="Modal_@item.PersonID">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Historial de @item.LastName, @item.Name @item.SecondName</h4>
+                    </div>
+                    <div class="modal-body">
+                        <ul>
+                            @foreach (var historyItem in item.HistoryMetadata)
+                            {
+                                <li>@historyItem</li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</form>
 
-@foreach (var item in Model)
-{
+    }
 
-    <div class="card bg-light mb-3" style="max-width: 18rem;">
-        <div class="card-header">Header</div>
-        <div class="card-body">
-            <p>Apellido, Nombre: @Html.DisplayFor(modelItem => item.LastName), @Html.DisplayFor(modelItem => item.Name)</p>
-            <p>Documento:  @Html.DisplayFor(modelItem => item.DocumentNumber) </p>
-            <a href="@Url.Action("PersonalInfo", "Person", new { ID = item.Personid})" class="card-link">Editar</a>
-            <a href="#" class="card-link">Borrar</a>
-        </div>
-    </div>
-}
+</div>
 
 @section scripts {
 
