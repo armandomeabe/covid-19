@@ -12,11 +12,20 @@ namespace COVID19.Controllers
     public class PersonController : BaseController
     {
         // GET: Person
-        public ActionResult Index()
+        public ActionResult Index(string SearchPeople)
         {
+
+
+            var Search = from P in this.COVID19Entities.People
+                         select P;
+                         
+                // busco por documento o por apellido
+                Search = Search.Where(s => s.DocumentNumber.ToString().Contains(SearchPeople) || s.LastName.Contains(SearchPeople));
+
+
             // Las entidades no deberían llegar a la vista nunca. Se recurre a este método provisionalmente para salir rápido.
-            var model = this.COVID19Entities.People.ToList();
-            return View(model);
+            //var model = this.COVID19Entities.People.ToList();
+            return View(Search);
         }
 
         public ActionResult PersonalInfo(int? id)
